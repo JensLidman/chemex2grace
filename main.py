@@ -5,7 +5,8 @@ import shutil
 import statistics as st
 
 ROOT_DIR=os.getcwd()+"/"
-
+TEMPLATE_GRACE_R2 = ROOT_DIR+"/template_R2.agr"
+TEMPLATE_GRACE_RES = ROOT_DIR+"/template_res.agr"
 
 def getFileInfo(fileName):
 	"""
@@ -112,13 +113,14 @@ def writeToR2GraceFile(magnet,R2,R2_name):
 	The template have the syntac INSERT_AXIS for the names, and INSERT_DATA for the R2 values
 	"""
 	file_R2 = open(ROOT_DIR+"R2_diff_"+magnet+".agr",'w', encoding='utf8')
-	template_R2 = open("/Users/xlidje/Figures/template_R2.agr",'r')
+	template_R2 = open(TEMPLATE_GRACE_R2,'r')
 	template = template_R2.read()
 	template = template.replace("INSERT_AXIS",R2_name)
 	template = template.replace("INSERT_DATA",R2)
 	file_R2.write(template)
 	file_R2.close()
 	template_R2.close()
+	
 def writeToR2pymolFile(magnet,R2):
 	"""
 	This will write the same R2 files as above, exept its an new empty file, and there will be no renaming
@@ -163,7 +165,7 @@ def writeResToGrace(dataTot):
 		print("Old plot directory removed")
 		
 	os.mkdir(plot_dir)
-	template_file = open("/Users/xlidje/Figures/template.agr",'r')
+	template_file = open(TEMPLATE_GRACE_RES,'r')
 	print(ROOT_DIR)
 	template = template_file.read()
 	for i in range(len(dataTot[0]["resdata"])):
