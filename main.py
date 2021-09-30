@@ -7,6 +7,7 @@ import statistics as st
 ROOT_DIR=os.getcwd()+"/"
 DATA_DIR= ROOT_DIR+ "/data/"
 RESULT_DIR = ROOT_DIR + "/result/"
+
 TEMPLATE_GRACE_R2 = ROOT_DIR+"/template_R2.agr"
 TEMPLATE_GRACE_RES = ROOT_DIR+"/template_res.agr"
 
@@ -114,7 +115,7 @@ def writeToR2GraceFile(magnet,R2,R2_name):
 	Writes the created R2 values to a existing tempalate file (This file have all the information of how the plot is supposed to look)
 	The template have the syntac INSERT_AXIS for the names, and INSERT_DATA for the R2 values
 	"""
-	file_R2 = open(ROOT_DIR+"R2_diff_"+magnet+".agr",'w', encoding='utf8')
+	file_R2 = open(RESULT_DIR+"R2_diff_"+magnet+".agr",'w', encoding='utf8')
 	template_R2 = open(TEMPLATE_GRACE_R2,'r')
 	template = template_R2.read()
 	template = template.replace("INSERT_AXIS",R2_name)
@@ -127,7 +128,7 @@ def writeToR2pymolFile(magnet,R2):
 	"""
 	This will write the same R2 files as above, exept its an new empty file, and there will be no renaming
 	"""
-	file_R2 = open(ROOT_DIR+"R2_diff_"+magnet+".txt",'w', encoding='utf8')
+	file_R2 = open(RESULT_DIR+"R2_diff_"+magnet+".txt",'w', encoding='utf8')
 	for i in R2:
 		file_R2.write(i[0]+"\t"+i[1]+"\n")
 	file_R2.close()
@@ -161,7 +162,7 @@ def calcR2(data):
 		writeToR2pymolFile(fitData["info"]["magnet"],R2_pymol)
 
 def writeResToGrace(dataTot):
-	plot_dir=ROOT_DIR+"plots/"
+	plot_dir=RESULT_DIR+"plots/"
 	os.mkdir(plot_dir)
 	template_file = open(TEMPLATE_GRACE_RES,'r')
 	template = template_file.read()
@@ -210,7 +211,7 @@ def checkData(dataTot):
 
 def createResultFolder():
 	if os.path.exists(RESULT_DIR):
-		shutil.rmtree(RESULT_DIR
+		shutil.rmtree(RESULT_DIR)
 		print("Old result directory removed")
 	os.mkdir(RESULT_DIR)
 
