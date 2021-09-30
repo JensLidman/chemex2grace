@@ -1,0 +1,14 @@
+######### Grace template for R2 ##########################
+
+There is alot of commands here to make the plot
+
+########## Here there will be a command to insert header ########
+
+header = "INSERT_TITLE"
+
+######### After this all the data will be inserted #######
+
+INSERT_DATA
+
+
+######### End of template file ###########################

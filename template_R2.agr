@@ -1,0 +1,14 @@
+######### Grace template for R2 ##########################
+
+There is alot of commands here to make the plot
+
+########## After this there will be x-axis labels ########
+
+INSERT_AXIS
+
+######### After this all the data will be inserted #######
+
+INSERT_DATA
+
+
+######### End of template file ###########################
