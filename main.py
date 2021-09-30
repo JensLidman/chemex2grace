@@ -5,6 +5,8 @@ import shutil
 import statistics as st
 
 ROOT_DIR=os.getcwd()+"/"
+DATA_DIR= ROOT_DIR+ "/data/"
+RESULT_DIR = ROOT_DIR + "/result/"
 TEMPLATE_GRACE_R2 = ROOT_DIR+"/template_R2.agr"
 TEMPLATE_GRACE_RES = ROOT_DIR+"/template_res.agr"
 
@@ -25,7 +27,7 @@ def getFileInfo(fileName):
 
 def readExpFile(fileName,type):
 	data =[]
-	file = open(ROOT_DIR+fileName,'r', encoding='utf8')
+	file = open(DATA_DIR+fileName,'r', encoding='utf8')
 	
 	all = file.read()
 	file.close()
@@ -67,7 +69,7 @@ def getDataFromFileList():
 	[[info],[[residue],[data]]]
 	"""
 	data = []
-	fileList = os.listdir(ROOT_DIR)
+	fileList = os.listdir(DATA_DIR)
 	print("Program started")
 	for f in fileList:
 		if "cpmg" not in f :
@@ -160,13 +162,8 @@ def calcR2(data):
 
 def writeResToGrace(dataTot):
 	plot_dir=ROOT_DIR+"plots/"
-	if os.path.exists(plot_dir):
-		shutil.rmtree(ROOT_DIR+"plots")
-		print("Old plot directory removed")
-		
 	os.mkdir(plot_dir)
 	template_file = open(TEMPLATE_GRACE_RES,'r')
-	print(ROOT_DIR)
 	template = template_file.read()
 	for i in range(len(dataTot[0]["resdata"])):
 		index=0
@@ -210,13 +207,19 @@ def checkData(dataTot):
 		print("Datasets are not equal residues with lengths of: "+ length_str)
 
 	return everyMatch
-	    
+
+def createResultFolder():
+	if os.path.exists(RESULT_DIR):
+		shutil.rmtree(RESULT_DIR
+		print("Old result directory removed")
+	os.mkdir(RESULT_DIR)
+
 def main():
 	data = getDataFromFileList()
     
 	if len(data)>0:
 		if checkData(data):
-			print("Jaha")
+			createResultFolder()
 			calcR2(data)
 			writeResToGrace(data)
 	else:
