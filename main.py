@@ -1,6 +1,5 @@
 import os
 import sys
-import numpy as np
 import re
 import shutil
 import statistics as st
