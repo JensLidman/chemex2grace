@@ -38,7 +38,6 @@ def readExpFile(fileName,type):
 		currentRes=""
 		values=[]
 		dataset={}
-		
 		for l in res.split("\n"):
 			str =l.strip()
 			r = re.match(r"\[([A-Za-z0-9_]+)-([A-Za-z0-9_]+)\]",str)
@@ -70,9 +69,15 @@ def getDataFromFileList():
 	[[info],[[residue],[data]]]
 	"""
 	data = []
-	fileList = os.listdir(DATA_DIR)
-	print("Program started")
-	for f in fileList:
+	filelist = os.listdir(DATA_DIR)
+	print("Loading data from data dir\n")
+	if len(filelist)>0:
+		print("DataFiles included:\n ----------------------------------")
+	else:
+		print("No data files found\n")
+		return data
+	
+	for f in filelist:
 		if "cpmg" not in f :
 			continue
 		d1 ={}
@@ -81,11 +86,12 @@ def getDataFromFileList():
 		if not d1["info"]["type"]  =="fit" and not d1["info"]["type"] == "exp": #This is to avoid additional files that have the same name
 			continue
 		else:
-			print("Data file included: "+f)
+			print("|  "+f+" |")
 		d1["resdata"]=readExpFile(f,d1["info"]["type"])
 		
 		
 		data.append(d1)
+	print(" ----------------------------------\n")
 
 	return data
 def getExpDataMean(data,magnet,index):
@@ -190,6 +196,7 @@ def writeResToGrace(dataTot):
 		res_file.close()
 			
 def checkData(dataTot):
+	
 	length_str = ""
 	length = []
 	for data in dataTot:
@@ -224,7 +231,7 @@ def main():
 			calcR2(data)
 			writeResToGrace(data)
 	else:
-		print("No data")
+		print("No data found")
 
 if __name__ == "__main__":
 	main()
