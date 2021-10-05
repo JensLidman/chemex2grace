@@ -3,13 +3,13 @@ import sys
 import re
 import shutil
 import statistics as st
+import argparse
+import pathlib
+RESULT_DIR = "result/"
 
-ROOT_DIR=os.getcwd()+"/"
-DATA_DIR= ROOT_DIR+ "/data/"
-RESULT_DIR = ROOT_DIR + "/result/"
-
-TEMPLATE_GRACE_R2 = ROOT_DIR+"/template_R2.agr"
-TEMPLATE_GRACE_RES = ROOT_DIR+"/template_res.agr"
+repo_path= pathlib.Path(__file__).parent.absolute()
+TEMPLATE_GRACE_R2 = f"{repo_path}/template_R2.agr"
+TEMPLATE_GRACE_RES = f"{repo_path}/template_res.agr"
 
 def getFileInfo(fileName):
 	"""
@@ -27,12 +27,19 @@ def getFileInfo(fileName):
 
 
 def readExpFile(fileName,type):
+	"""
+	This function will read all data from each file, then split it into datasets as an array in data where all datasets have a "name" and its "values"
+	The "values" for exp file will be in a 4 column with
+		delay, data, data error up, data error down
+	and for the fit data will be 2 column with
+		delay, data
+	"""
 	data =[]
-	file = open(DATA_DIR+fileName,'r', encoding='utf8')
+	file = open(fileName,'r', encoding='utf8')
 	
-	all = file.read()
+	allDataFromFile = file.read()
+	allRes = allDataFromFile.split("\n\n")
 	file.close()
-	allRes = all.split("\n\n")
 	
 	for res in allRes:
 		currentRes=""
@@ -63,13 +70,13 @@ def readExpFile(fileName,type):
 	return data_sorted
 
 
-def getDataFromFileList():
+def getDataFromFileList(filedir):
 	"""
 	Reads all data from each file to one big data set ordered as:
 	[[info],[[residue],[data]]]
 	"""
 	data = []
-	filelist = os.listdir(DATA_DIR)
+	filelist = os.listdir(filedir)
 	print("Loading data from data dir\n")
 	if len(filelist)>0:
 		print("DataFiles included:\n ----------------------------------")
@@ -138,13 +145,20 @@ def writeToR2pymolFile(magnet,R2):
 	for i in R2:
 		file_R2.write(i[0]+"\t"+i[1]+"\n")
 	file_R2.close()
-
-def calcR2(data):
+def arrangepeaklist(plist):
+	list = sorted(plist,key=lambda x: x[1:])
+	peaklist = []
+	for peak in plist:
+		l = peak.strip().split(" ")[0]
+		print(l)
+		
+def calcR2(data,plist):
 	"""
 	This will make the calculation of R2 diff, which is the absolute value of the difference between the lowset value of the fitted data and the highest.
 	There is no error in the fitted data, to get som errors they are taken from the experimental data.
 	First the the correct detasets are extracted (info then type from directory) to be fit.
 	"""
+	peaklist = arrangepeaklist(plist)
 
 	fitDataList = []
 	for d in data:
@@ -168,6 +182,10 @@ def calcR2(data):
 		writeToR2pymolFile(fitData["info"]["magnet"],R2_pymol)
 
 def writeResToGrace(dataTot):
+	"""
+	This function creates all diffrent plot files for each residue with datasets from all different files (From this raw data its 4 but has the option to be more)
+	
+	"""
 	plot_dir=RESULT_DIR+"plots/"
 	os.mkdir(plot_dir)
 	template_file = open(TEMPLATE_GRACE_RES,'r')
@@ -180,7 +198,10 @@ def writeResToGrace(dataTot):
 		res_file.write(template_fixed)
 		
 		dataSorted = sorted(dataTot,key=lambda x: x["info"]["type"])
-
+		"""
+		The way grace want x axis is:
+			@target G0.S0"\n@type xy\n
+		"""
 		for data in dataSorted:
 			if data["info"]["type"] == "fit":
 				res_file.write("@target G0.S"+str(index)+"\n@type xy\n")
@@ -223,7 +244,14 @@ def createResultFolder():
 	os.mkdir(RESULT_DIR)
 
 def main():
-	data = getDataFromFileList()
+	parser = argparse.ArgumentParser()
+	parser.add_argument("-n", "--name", action="store", nargs="?", help="Name of datafolder")
+		parser.add_argument("-p", "--peaklist", action="store", nargs="?", help="Reference peaklist")
+	args = parser.parse_args()
+    
+
+
+	data = getDataFromFileList(args.name)
     
 	if len(data)>0:
 		if checkData(data):
