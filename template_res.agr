@@ -6,9 +6,5 @@ There is alot of commands here to make the plot
 
 header = "INSERT_TITLE"
 
-######### After this all the data will be inserted #######
+######### After this all the data will be added after this ######
 
-INSERT_DATA
-
-
-######### End of template file ###########################
