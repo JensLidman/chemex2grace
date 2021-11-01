@@ -2,13 +2,18 @@
 
 There is alot of commands here to make the plot
 
+width = AXIS_WIDTH
+
 ########## After this there will be x-axis labels ########
 
 INSERT_AXIS
 
 ######### After this all the data will be inserted #######
 
-INSERT_DATA
+INSERT_DATA_R2
 
+######### After this all the missing data will be inserted #######
+
+INSERT_MISSING
 
 ######### End of template file ###########################
