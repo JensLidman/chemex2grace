@@ -3,6 +3,10 @@ uses NMR data.
 The data created from Chemex is consisting of two different files (*.exp, *.fit) for each magnet, usually two. 
 In each of these files datapoints for each atom that exist from the NMR data, for the .exp files the data is set up as:
 
+Parser arguments:
+--name or -n: data folder that should be used e.g. data/
+--peaklist: Will add a peaklist for comparison with the existing data and the peaklist that should have data e.g. peaklist.txt 
+
 [ATOMNAME]
 Delay	R2	R2_error_Up	R2_error_down
 
